@@ -1,0 +1,125 @@
+/* Student Grade Tracker with User Interface */
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+
+class GradeTracker:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Student Grade Tracker")
+
+        self.grades = []
+        self.student_name = ""
+
+        # Initial UI setup to ask for student's name
+        self.setup_initial_ui()
+
+    def setup_initial_ui(self):
+        self.clear_frame()
+        
+        tk.Label(self.root, text="Enter Student Name:").pack(padx=10, pady=10)
+        self.name_entry = tk.Entry(self.root)
+        self.name_entry.pack(padx=10, pady=10)
+
+        tk.Button(self.root, text="Next", command=self.save_student_name).pack(padx=10, pady=10)
+
+    def save_student_name(self):
+        self.student_name = self.name_entry.get()
+        if self.student_name:
+            self.setup_subject_ui()
+        else:
+            messagebox.showerror("Input Error", "Student name cannot be empty")
+
+    def setup_subject_ui(self):
+        self.clear_frame()
+        
+        tk.Label(self.root, text=f"Student: {self.student_name}").pack(padx=10, pady=10)
+        tk.Label(self.root, text="Enter Subject:").pack(padx=10, pady=10)
+        self.subject_entry = tk.Entry(self.root)
+        self.subject_entry.pack(padx=10, pady=10)
+
+        tk.Label(self.root, text="Enter Marks:").pack(padx=10, pady=10)
+        self.marks_entry = tk.Entry(self.root)
+        self.marks_entry.pack(padx=10, pady=10)
+
+        tk.Button(self.root, text="Add Subject", command=self.add_subject).pack(padx=10, pady=10)
+        tk.Button(self.root, text="Calculate Grades", command=self.calculate_grades).pack(padx=10, pady=10)
+
+        # Treeview to display the subjects and marks
+        self.tree = ttk.Treeview(self.root, columns=("Subject", "Marks"), show='headings')
+        self.tree.heading("Subject", text="Subject")
+        self.tree.heading("Marks", text="Marks")
+        self.tree.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+    def add_subject(self):
+        subject = self.subject_entry.get()
+        marks = self.marks_entry.get()
+
+        if subject and marks:
+            try:
+                marks = float(marks)
+                self.grades.append((subject, marks))
+                self.tree.insert("", "end", values=(subject, marks))
+                self.subject_entry.delete(0, tk.END)
+                self.marks_entry.delete(0, tk.END)
+            except ValueError:
+                messagebox.showerror("Invalid input", "Marks must be a number")
+        else:
+            messagebox.showerror("Input Error", "Both subject and marks fields must be filled")
+
+    def calculate_grades(self):
+        if not self.grades:
+            messagebox.showinfo("No grades", "No grades available to calculate")
+            return
+
+        total_marks = sum(grade[1] for grade in self.grades)
+        average_marks = total_marks / len(self.grades)
+        letter_grade = self.calculate_letter_grade(average_marks)
+        gpa = self.calculate_gpa(average_marks)
+
+        self.show_results(average_marks, letter_grade, gpa)
+
+    def calculate_letter_grade(self, average):
+        if average >= 90:
+            return 'A'
+        elif average >= 80:
+            return 'B'
+        elif average >= 70:
+            return 'C'
+        elif average >= 60:
+            return 'D'
+        else:
+            return 'F'
+
+    def calculate_gpa(self, average):
+        # Assuming a 4.0 scale
+        if average >= 90:
+            return 4.0
+        elif average >= 80:
+            return 3.0
+        elif average >= 70:
+            return 2.0
+        elif average >= 60:
+            return 1.0
+        else:
+            return 0.0
+
+    def show_results(self, average, letter, gpa):
+        self.clear_frame()
+
+        tk.Label(self.root, text=f"Student: {self.student_name}").pack(padx=10, pady=10)
+        tk.Label(self.root, text=f"Average Marks: {average:.2f}").pack(padx=10, pady=10)
+        tk.Label(self.root, text=f"Letter Grade: {letter}").pack(padx=10, pady=10)
+        tk.Label(self.root, text=f"GPA: {gpa:.2f}").pack(padx=10, pady=10)
+
+        tk.Button(self.root, text="Restart", command=self.setup_initial_ui).pack(padx=10, pady=10)
+
+    def clear_frame(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = GradeTracker(root)
+    root.mainloop()
