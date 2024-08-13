@@ -8,6 +8,19 @@
 
 ## Overview of the Project
 
+### First Page
+![](https://github.com/user-attachments/assets/025d9c77-bfe0-4726-bcc5-b6d4ba63108e)
+
+### Subject and Marks Input Screen
+![](https://github.com/user-attachments/assets/92ddf90a-5035-4209-8279-93425846b8e9)
+
+### Total Subject and Marks Entered Screen
+![](https://github.com/user-attachments/assets/001c03e6-645a-4b4e-8f12-4b40421e9efe)
+
+### Result Displaying Screen
+![](https://github.com/user-attachments/assets/a687a58b-bd5c-4706-9308-a95bb4a8ef32)
+
+
 ### Project: Student Grade Tracker
 
 ### Objective
